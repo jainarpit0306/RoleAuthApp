@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="footer-links list-reset">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li>
+            <a asp-controller="Account" asp-action="Profile" title="Manage">Hello @User.Identity?.Name!</a>
+        </li>
+        <li>
+            <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li>
+            <a asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+    }
+</ul>
