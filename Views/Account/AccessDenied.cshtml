@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-inner">
+            <div class="hero-copy">
+                <h1 class="hero-title mt-0">@ViewData["Title"]</h1>
+                <p class="hero-paragraph">You do not have permission to view this page.</p>
+                <div class="hero-cta"><a class="button button-primary" asp-area="" asp-controller="Home" asp-action="Index">Home</a><a class="button" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></div>
+            </div>
+        </div>
+    </div>
+</section>
