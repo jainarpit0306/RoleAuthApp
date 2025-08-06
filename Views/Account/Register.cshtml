@@ -42,6 +42,19 @@
                             <span asp-validation-for="ConfirmPassword"></span>
                         </div>
                     </div>
+
+                    <div class="boxed-container mt-24">
+                        <div class="mt-8">
+                            <label asp-for="Role"></label>
+                        </div>
+                        <div class="mt-8">
+                            <select asp-for="Role" class="input" asp-items="Model.Roles">
+                                <option value="">-- Select Role --</option>
+                            </select>
+                            <span asp-validation-for="Role"></span>
+                        </div>
+                    </div>
+
                     <div class="hero-cta mt-24">
                         <button type="submit" class="button button-primary">Register</button>
                         <a class="button" asp-controller="Account" asp-action="Login">Login here</a>

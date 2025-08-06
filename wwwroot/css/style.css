@@ -9,7 +9,7 @@ body {
 }
 
 ul li.field-validation-valid {
-    color:red;
+    color: red;
 }
 
 article, aside, footer, header, nav, section {
@@ -175,8 +175,8 @@ textarea {
     width: 18px;
 }
 
-.field-validation-error{
-    color:red;
+.field-validation-error {
+    color: red;
 }
 
 .custom-checkbox {
@@ -222,6 +222,10 @@ textarea {
             display: block;
         }
 
+
+select.input {
+    padding: 0 13px 0 13px;
+}
 
 [type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button {
     height: auto

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RoleAuthApp.Models;
 using RoleAuthApp.ViewModels;
+using System.Data;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoleAuthApp.Controllers
 {
@@ -10,19 +13,32 @@ namespace RoleAuthApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            var model = new RegisterViewModel
+            {
+                Roles = new List<SelectListItem> { new SelectListItem { Value = "User", Text = "User" } }
+            };
+
+            return View(model);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            model.Roles = new List<SelectListItem> { new SelectListItem { Value = "User", Text = "User" } };
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -30,8 +46,24 @@ namespace RoleAuthApp.Controllers
 
                 if (result.Succeeded)
                 {
+                    string? role = "User";
+
+                    if (model.Role == null || model.Role == "")
+                    {
+                        role = model.Role;
+                    }
+
+                    await _userManager.AddToRoleAsync(user, role);
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    if (role.Contains("Admin")) return RedirectToAction("Dashboard", "Admin");
+                    if (role.Contains("User")) return RedirectToAction("Dashboard", "User");
+
                     return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Registration Failed.");
                 }
 
                 foreach (var error in result.Errors)
@@ -42,17 +74,30 @@ namespace RoleAuthApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login() => View();
+        public IActionResult Login(string returnUrl = null)
+        {
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            if (!ModelState.IsValid) return View(model);
+
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
                 if (result.Succeeded)
+                {
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Contains("Admin")) return RedirectToAction("Dashboard", "Admin");
+                    if (roles.Contains("User")) return RedirectToAction("Dashboard", "User");
+
                     return RedirectToAction("Index", "Home");
+                }
 
                 ModelState.AddModelError("", "Invalid login attempt.");
             }

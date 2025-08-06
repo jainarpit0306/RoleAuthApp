@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoleAuthApp.ViewModels
 {
@@ -12,5 +13,11 @@ namespace RoleAuthApp.ViewModels
 
         [DataType(DataType.Password), Compare("Password")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Please select a role")]
+        public string Role { get; set; }
+
+        // Optional: for dropdown list display
+        public List<SelectListItem>? Roles { get; set; }
     }
 }

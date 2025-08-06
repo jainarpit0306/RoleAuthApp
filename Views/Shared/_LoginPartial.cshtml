@@ -6,7 +6,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var user = await UserManager.GetUserAsync(User);
-        var roles = await UserManager.GetRolesAsync(user);
+       @*  var roles = await UserManager.GetRolesAsync(user);
 
         if (roles.Contains("Admin"))
         {
@@ -19,7 +19,7 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-controller="User" asp-action="Dashboard">User Dashboard</a>
             </li>
-        }
+        } *@
         <li>
             @* <a asp-controller="Account" asp-action="Profile" title="Manage">Hello, @(user.FullName != null ? @user.FullName : User.Identity?.Name!)</a> *@
             <a href="#" title="Manage">Hello, @(user.FullName != null ? @user.FullName : User.Identity?.Name!)</a>
